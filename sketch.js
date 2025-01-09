@@ -95,9 +95,22 @@ function handleMovement() {
         velocityY = jumpForce;
         isJumping = true;
     }
+
+    if (keyIsDown(32) && !isJumping) { // Spacebar key
+        velocityY = jumpForce;
+        isJumping = true;
+    }
+
     if (keyIsDown(83)) mouseShooter.y = min(mouseShooter.y + 5, height - mouseShooter.h / 2); // S key
-    if (keyIsDown(81)) mouseShooter.x = max(mouseShooter.x - 5, mouseShooter.w / 2); // Q key
-    if (keyIsDown(68)) mouseShooter.x = min(mouseShooter.x + 5, width - mouseShooter.w / 2); // D key
+    if (keyIsDown(81)) {
+        mouseShooter.x = max(mouseShooter.x - 5, mouseShooter.w / 2); // Q key
+        mouseShooter.mirror.x = true; // Flip image horizontally
+    } 
+    if (keyIsDown(68)) {
+        mouseShooter.x = min(mouseShooter.x + 5, width - mouseShooter.w / 2); // D key
+        mouseShooter.mirror.x = false; // Reset image orientation
+    }
+
 
     // Ensure mouseShooter stays within the canvas vertically
     mouseShooter.y = max(mouseShooter.y, mouseShooter.h / 2);
