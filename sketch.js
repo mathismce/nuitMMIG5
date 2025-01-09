@@ -1,19 +1,17 @@
 let isGameStarted = false;
 let isGameOver = false; // Variable to track if the game is over
 let isWin = false; // Variable to track if the player wins
-let bigCircle, lasers, mouseShooter, ground;
+let lasers, mouseShooter, ground;
 let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
 
+
+
 function setup() {
     new Canvas();
     displayMode('maxed');
-
-    bigCircle = new Sprite(width / 2, height / 2, 100, 'static');
-    bigCircle.color = 'red';
-    bigCircle.health = 100; // Add health property
 
     lasers = new Group();
     lasers.image = 'assets/asteroids_bullet.png';
@@ -23,7 +21,6 @@ function setup() {
 
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
-
 
     setupScoreSystem();
 
@@ -50,7 +47,6 @@ function setup() {
         }
         platforms.push(new Sprite(x, y, 100, 20, 'static'));
     }
-
 
     for (let platform of platforms) {
         platform.color = 'blue';
@@ -112,7 +108,6 @@ function handleMovement() {
         mouseShooter.x = min(mouseShooter.x + 5, width - mouseShooter.w / 2); // D key
         mouseShooter.mirror.x = false; // Reset image orientation
     }
-
 
     // Ensure mouseShooter stays within the canvas vertically
     mouseShooter.y = max(mouseShooter.y, mouseShooter.h / 2);
@@ -215,34 +210,10 @@ function updateProjectiles() {
 }
 
 function checkCollisions() {
-    lasers.collides(bigCircle, circleHit);
-
     for (let i = projectiles.length - 1; i >= 0; i--) {
         let p = projectiles[i];
-        if (p.collides(bigCircle)) {
-            circleHit(p, bigCircle);
-            projectiles.splice(i, 1);
-        }
+        // Add collision checks with other objects if needed
     }
-}
-
-function circleHit(projectile, circle) {
-    projectile.remove();
-    circle.health = max(0, circle.health - 10); // Decrease health
-    let newSize = map(circle.health, 0, 100, 0, 100); // Map health to size
-    circle.w = newSize;
-    circle.h = newSize;
-
-    if (circle.health <= 0) {
-        isGameStarted = false;
-        isGameWin = true;
-        // Affiche l'écran de fin de jeu et cache le canvas
-        document.getElementById("WINScreen").style.display = "block";
-
-        const replayButton = document.getElementById("replayButton");
-        replayButton.addEventListener("click", restartGame, { once: true });
-    }
-
 }
 
 function restartGame() {
@@ -255,12 +226,6 @@ function restartGame() {
     isWin = false;
 
     // Réinitialiser les sprites et leur état
-    bigCircle.x = width / 2;
-    bigCircle.y = height / 2;
-    bigCircle.w = 100;
-    bigCircle.h = 100;
-    bigCircle.health = 100;
-
     mouseShooter.x = width / 2;
     mouseShooter.y = height - 30;
     mouseShooter.health = 100;
@@ -272,21 +237,6 @@ function restartGame() {
     projectiles = [];
 
     // Cacher l'écran de victoire et afficher le jeu
-
-}
-
-
-function drawHealthBar() {
-    let healthBarWidth = width - (width / 4); // Prendre toute la largeur du canvas
-    let healthBarHeight = 10;
-    let healthBarX = (width - healthBarWidth) / 2; // Positionner au centre du canvas
-    let healthBarY = 20; // Position en haut du canvas
-
-    fill(255, 0, 0);
-    rect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
-
-    fill(0, 255, 0);
-    rect(healthBarX, healthBarY, healthBarWidth * (bigCircle.health / 100), healthBarHeight);
 }
 
 function drawMouseShooterHealthBar() {
@@ -304,11 +254,6 @@ function drawMouseShooterHealthBar() {
 
 function startNewGame() {
     // Réinitialisation des positions et des éléments du jeu
-    bigCircle.x = width / 2;
-    bigCircle.y = height / 2;
-    bigCircle.w = 100;
-    bigCircle.h = 100;
-    bigCircle.health = 100; // Réinitialiser la santé
     mouseShooter.y = height - 30;
     mouseShooter.health = 100; // Reset health
     velocityY = 0;
@@ -332,6 +277,17 @@ function endGame() {
     document.getElementById("gameCanvas").style.display = "none"; // Cache le canvas du jeu
 }
 
+// function checkBossDefeat() {
+//     if (bossSpawned && boss.health <= 0) {
+//         boss.remove();
+//         bossSpawned = false;
+//         isWin = true;
+//         document.getElementById("WINScreen").style.display = "block";
+//         document.getElementById("gameCanvas").style.display = "none";
+//         noLoop(); // Stop the draw loop
+//     }
+// }
+
 function draw() {
     background(100);
 
@@ -341,18 +297,32 @@ function draw() {
         handleShooting();
         updateProjectiles();
 
-        updateEnemies(); // Update enemies
-        updateFlyingEnemies()
+        if (score > 200 && !bossSpawned) {
+            spawnBoss();
+            score = 0
+            bossSpawned = true; // Ensure only one boss is spawned
+            // Remove all other enemies
+            enemies.forEach(enemy => enemy.remove());
+            enemies = [];
+            flyingEnemies.forEach(enemy => enemy.remove());
+            flyingEnemies = [];
+        } else {
+            updateEnemies(); // Update enemies
+            updateFlyingEnemies();
+        }
 
         checkCollisions();
-        drawHealthBar(); // Draw the health bar
+
         drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
         updateMovingPlatform();
 
+        updateBoss();
+
+
         // Spawn enemies at intervals
-        if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
+        if (millis() - lastEnemySpawnTime > enemySpawnInterval && !bossSpawned) {
             spawnEnemy();
-            spawnFlyingEnemy()
+            spawnFlyingEnemy();
             lastEnemySpawnTime = millis();
         }
     }
