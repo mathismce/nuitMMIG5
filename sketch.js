@@ -4,7 +4,6 @@ let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
 
-
 function setup() {
     new Canvas();
     displayMode('maxed');
@@ -18,6 +17,7 @@ function setup() {
 
     mouseShooter = new Sprite(width / 2, height - 50, 20, 20, 'static');
     mouseShooter.color = 'white';
+    mouseShooter.health = 100; // Add health property to mouseShooter
 
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
@@ -33,9 +33,6 @@ function setup() {
 
     startNewGame();
 }
-
-
-
 
 function applyGravity() {
     velocityY += gravity;
@@ -122,11 +119,7 @@ function checkCollisions() {
             projectiles.splice(i, 1);
         }
     }
-
-
 }
-
-
 
 function circleHit(projectile, circle) {
     projectile.remove();
@@ -149,6 +142,19 @@ function drawHealthBar() {
     rect(healthBarX, healthBarY, healthBarWidth * (bigCircle.health / 100), healthBarHeight);
 }
 
+function drawMouseShooterHealthBar() {
+    let healthBarWidth = mouseShooter.w + mouseShooter.w * 2;
+    let healthBarHeight = 10;
+    let healthBarX = mouseShooter.x - healthBarWidth / 2;
+    let healthBarY = mouseShooter.y - mouseShooter.h / 2 - 20;
+
+    fill(255, 0, 0);
+    rect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+
+    fill(0, 255, 0);
+    rect(healthBarX, healthBarY, healthBarWidth * (mouseShooter.health / 100), healthBarHeight);
+}
+
 function startNewGame() {
     bigCircle.x = width / 2;
     bigCircle.y = height / 2;
@@ -156,6 +162,7 @@ function startNewGame() {
     bigCircle.h = 100;
     bigCircle.health = 100; // Reset health
     mouseShooter.y = height - 30;
+    mouseShooter.health = 100; // Reset health
     velocityY = 0;
     isJumping = false;
 }
@@ -170,6 +177,7 @@ function draw() {
     updateEnemies(); // Update enemies
     checkCollisions();
     drawHealthBar(); // Draw the health bar
+    drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
 
     // Spawn enemies at intervals
     if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
