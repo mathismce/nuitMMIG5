@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    overflow: hidden;
+}
+
+#startScreen {
+    position: fixed; /* Utilise fixed pour qu'il reste centré même lors du scroll */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centre précisément */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+}
+
+#startScreen button {
+    font-size: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #ff4b5c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#startScreen button:hover {
+    background-color: #ff2f3b;
+}
+
+#gameCanvas {
+    position: fixed;
+    display: none; /* Masque l'écran du jeu au début */
+    z-index: 1;
+}
