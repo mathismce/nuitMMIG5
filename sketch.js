@@ -24,6 +24,14 @@ function setup() {
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
 
+
+    setupScoreSystem();
+
+    // Create platforms
+    platforms.push(new Sprite(width / 4, height - 100, 100, 20, 'static'));
+    platforms.push(new Sprite(width / 2, height - 200, 100, 20, 'static'));
+    platforms.push(new Sprite(3 * width / 4, height - 300, 100, 20, 'static'));
+
     // Create platformsd
     let minDistance = 200; // Minimum distance between platforms
     for (let i = 0; i < random(5, 10); i++) {
@@ -42,6 +50,7 @@ function setup() {
         }
         platforms.push(new Sprite(x, y, 100, 20, 'static'));
     }
+
 
     for (let platform of platforms) {
         platform.color = 'blue';
@@ -98,7 +107,7 @@ function handleMovement() {
     if (keyIsDown(81)) {
         mouseShooter.x = max(mouseShooter.x - 5, mouseShooter.w / 2); // Q key
         mouseShooter.mirror.x = true; // Flip image horizontally
-    } 
+    }
     if (keyIsDown(68)) {
         mouseShooter.x = min(mouseShooter.x + 5, width - mouseShooter.w / 2); // D key
         mouseShooter.mirror.x = false; // Reset image orientation
@@ -228,8 +237,8 @@ function circleHit(projectile, circle) {
         isGameStarted = false;
         isGameWin = true;
         // Affiche l'écran de fin de jeu et cache le canvas
-        document.getElementById("WINScreen").style.display = "block"; 
-        
+        document.getElementById("WINScreen").style.display = "block";
+
         const replayButton = document.getElementById("replayButton");
         replayButton.addEventListener("click", restartGame, { once: true });
     }
@@ -263,7 +272,7 @@ function restartGame() {
     projectiles = [];
 
     // Cacher l'écran de victoire et afficher le jeu
-   
+
 }
 
 
@@ -331,7 +340,10 @@ function draw() {
         handleMovement();
         handleShooting();
         updateProjectiles();
+
         updateEnemies(); // Update enemies
+        updateFlyingEnemies()
+
         checkCollisions();
         drawHealthBar(); // Draw the health bar
         drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
@@ -340,6 +352,7 @@ function draw() {
         // Spawn enemies at intervals
         if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
             spawnEnemy();
+            spawnFlyingEnemy()
             lastEnemySpawnTime = millis();
         }
     }

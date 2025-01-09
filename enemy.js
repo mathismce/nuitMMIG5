@@ -56,6 +56,7 @@ function updateEnemies() {
                 projectiles.splice(j, 1);
                 if (enemy.health <= 0) {
                     enemy.remove();
+                    increaseScore(100)
                     enemies.splice(i, 1);
                 }
                 break;
