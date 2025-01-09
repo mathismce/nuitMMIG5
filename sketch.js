@@ -7,9 +7,6 @@ let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
 
-
-
-
 function setup() {
     new Canvas();
     displayMode('maxed');
