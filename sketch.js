@@ -3,9 +3,6 @@ let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
-let enemies = [];
-let enemySpawnInterval = 2000; // Interval between enemy spawns in milliseconds
-let lastEnemySpawnTime = 0;
 
 
 function setup() {
@@ -161,38 +158,6 @@ function startNewGame() {
     mouseShooter.y = height - 30;
     velocityY = 0;
     isJumping = false;
-}
-
-function spawnEnemy() {
-    let enemy = new Sprite(-50, random(50, height - 50), 50, 50, 'dynamic');
-    enemy.color = 'purple';
-    enemy.velocityX = 2;
-    enemies.push(enemy);
-}
-
-function updateEnemies() {
-    for (let i = enemies.length - 1; i >= 0; i--) {
-        let enemy = enemies[i];
-        enemy.x += enemy.velocityX;
-
-        // Remove enemy if it goes out of bounds
-        if (enemy.x > width + 50) {
-            enemy.remove();
-            enemies.splice(i, 1);
-        }
-
-        // Check collision with projectiles
-        for (let j = projectiles.length - 1; j >= 0; j--) {
-            let p = projectiles[j];
-            if (p.collides(enemy)) {
-                enemy.remove();
-                enemies.splice(i, 1);
-                p.remove();
-                projectiles.splice(j, 1);
-                break;
-            }
-        }
-    }
 }
 
 function draw() {
