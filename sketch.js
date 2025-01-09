@@ -7,6 +7,7 @@ let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
 
+
 function setup() {
     new Canvas();
     displayMode('maxed');
@@ -28,27 +29,28 @@ function setup() {
     setupScoreSystem();
 
     // Create platforms
+    /*
     platforms.push(new Sprite(width / 4, height - 100, 100, 20, 'static'));
     platforms.push(new Sprite(width / 2, height - 200, 100, 20, 'static'));
     platforms.push(new Sprite(3 * width / 4, height - 300, 100, 20, 'static'));
+    */
 
-    // Create platformsd
-    let minDistance = 200; // Minimum distance between platforms
-    for (let i = 0; i < random(5, 10); i++) {
+    // Create platforms
+    let minDistance = 250; // Minimum distance between platforms
+    for (let i = 0; i < 5; i++) {
         let x, y;
         let validPosition = false;
         while (!validPosition) {
             x = random(width);
-            y = random(height - 300, height - 100); // Vary heights more
+            y = random(height - 300, height - 150); 
             validPosition = true;
             for (let platform of platforms) {
                 if (dist(x, y, platform.x, platform.y) < minDistance) {
                     validPosition = false;
-                    break;
                 }
             }
         }
-        platforms.push(new Sprite(x, y, 100, 20, 'static'));
+        platforms.push(new Sprite(x, y, 150, 20, 'static'));
     }
 
 
