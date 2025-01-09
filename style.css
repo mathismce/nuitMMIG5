@@ -25,7 +25,7 @@ body {
     height: 100%;
 }
 
-#startScreen button {
+button {
     font-size: 20px;
     padding: 10px 20px;
     cursor: pointer;
@@ -35,7 +35,7 @@ body {
     border-radius: 5px;
 }
 
-#startScreen button:hover {
+button:hover {
     background-color: #ff2f3b;
 }
 
