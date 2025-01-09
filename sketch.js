@@ -3,7 +3,9 @@ let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
+
 let movingPlatform; // Variable to hold the moving platform
+
 
 function setup() {
     new Canvas();
@@ -16,8 +18,22 @@ function setup() {
     lasers = new Group();
     lasers.image = 'assets/asteroids_bullet.png';
 
-    mouseShooter = new Sprite(width / 2, height - 50, 20, 20, 'dynamic');
-    mouseShooter.color = 'white';
+    mouseShooter = new Sprite(width / 2, height - 50, 100, 80, 'static');
+    mouseShooter.image = 'assets/zippy.svg';
+    
+
+    ground = new Sprite(width / 2, height - 10, width, 20, 'static');
+    ground.color = 'blue';
+
+    // Create platforms
+    platforms.push(new Sprite(width / 4, height - 100, 100, 20, 'static'));
+    platforms.push(new Sprite(width / 2, height - 200, 100, 20, 'static'));
+    platforms.push(new Sprite(3 * width / 4, height - 300, 100, 20, 'static'));
+
+    for (let platform of platforms) {
+        platform.color = 'blue';
+    }
+
 
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
@@ -39,6 +55,7 @@ function setup() {
 
     startNewGame();
 }
+
 
 function applyGravity() {
     velocityY += gravity;
@@ -63,7 +80,8 @@ function applyGravity() {
 }
 
 function handleMovement() {
-    if (keyIsDown(90) && !isJumping) { // Z key for jump
+
+    if (keyIsDown(90) && !isJumping) { // Z key
         velocityY = jumpForce;
         isJumping = true;
     }
@@ -101,7 +119,7 @@ function updateMovingPlatform() {
     // Reverse direction if hitting boundaries
     if (movingPlatform.x >= rightLimit || movingPlatform.x <= leftLimit) {
         movingPlatform.direction *= -1; // Change direction
-    }
+
 
     // Handle falling and landing from below or above the moving platform
     let isAbovePlatform =
@@ -220,7 +238,9 @@ function startNewGame() {
 }
 
 function draw() {
-    background(0);
+
+    background(100);
+
 
     applyGravity();
     handleMovement();
@@ -229,7 +249,9 @@ function draw() {
     updateEnemies(); // Update enemies
     checkCollisions();
     drawHealthBar(); // Draw the health bar
+
     updateMovingPlatform(); // Update moving platform
+
 
     // Spawn enemies at intervals
     if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
