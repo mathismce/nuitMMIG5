@@ -119,6 +119,7 @@ function updateMovingPlatform() {
     // Reverse direction if hitting boundaries
     if (movingPlatform.x >= rightLimit || movingPlatform.x <= leftLimit) {
         movingPlatform.direction *= -1; // Change direction
+    }
 
 
     // Handle falling and landing from below or above the moving platform
