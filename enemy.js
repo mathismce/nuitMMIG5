@@ -71,6 +71,7 @@ function updateEnemies() {
         drawEnemyHealthBar(enemy);
     }
 
+
     // Update enemy projectiles
     for (let i = enemyProjectiles.length - 1; i >= 0; i--) {
         let p = enemyProjectiles[i];
@@ -111,4 +112,6 @@ function drawEnemyHealthBar(enemy) {
 
     fill(0, 255, 0);
     rect(healthBarX, healthBarY, healthBarWidth * (enemy.health / 30), healthBarHeight); // Adjusted to max health of 30
+
 }
+
