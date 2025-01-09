@@ -44,3 +44,25 @@ body {
     display: none; /* Masque l'écran du jeu au début */
     z-index: 1;
 }
+
+.title{
+    padding-bottom: 2rem;
+}
+
+.instructions__title{
+    font-size: 3.5rem;
+    font-weight: 500;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.instructions__text {
+    text-align: left;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    width: fit-content;
+}
+
+.instructions__text-key{
+    font-weight: 600;
+}
