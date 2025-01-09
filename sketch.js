@@ -1,14 +1,11 @@
 let isGameStarted = false;
+let isGameOver = false; // Variable to track if the game is over
+let isWin = false; // Variable to track if the player wins
 let bigCircle, lasers, mouseShooter, ground;
 let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
-
-
-let movingPlatform; // Variable to hold the moving platform
-
-
 
 function setup() {
     new Canvas();
@@ -24,25 +21,10 @@ function setup() {
     mouseShooter = new Sprite(width / 2, height - 50, 70, 80, 'static');
     mouseShooter.image = 'assets/zippy.svg';
 
-
-
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
 
     // Create platforms
-    platforms.push(new Sprite(width / 4, height - 100, 100, 20, 'static'));
-    platforms.push(new Sprite(width / 2, height - 200, 100, 20, 'static'));
-    platforms.push(new Sprite(3 * width / 4, height - 300, 100, 20, 'static'));
-
-    for (let platform of platforms) {
-        platform.color = 'blue';
-    }
-
-    
-    ground = new Sprite(width / 2, height - 10, width, 20, 'static');
-    ground.color = 'blue';
-
-    // Create static platforms
     platforms.push(new Sprite(width / 4, height - 100, 100, 20, 'static'));
     platforms.push(new Sprite(width / 2, height - 200, 100, 20, 'static'));
     platforms.push(new Sprite(3 * width / 4, height - 300, 100, 20, 'static'));
@@ -59,13 +41,11 @@ function setup() {
 
     document.getElementById("startScreen").style.display = "block";
     document.getElementById("gameCanvas").style.display = "none";
-
+    document.getElementById("GOScreen").style.display = "none"; // Hide game over screen initially
+    document.getElementById("WINScreen").style.display = "none";
     // Ajout de l'événement pour démarrer le jeu
     document.getElementById("startButton").addEventListener("click", startNewGame);
-
 }
-
-
 
 function applyGravity() {
     velocityY += gravity;
@@ -90,7 +70,6 @@ function applyGravity() {
 }
 
 function handleMovement() {
-
     if (keyIsDown(90) && !isJumping) { // Z key
         velocityY = jumpForce;
         isJumping = true;
@@ -143,7 +122,6 @@ function updateMovingPlatform() {
     if (movingPlatform.x >= rightLimit || movingPlatform.x <= leftLimit) {
         movingPlatform.direction *= -1; // Change direction
     }
-
 
     // Handle falling and landing from below or above the moving platform
     let isAbovePlatform =
@@ -231,7 +209,49 @@ function circleHit(projectile, circle) {
     let newSize = map(circle.health, 0, 100, 0, 100); // Map health to size
     circle.w = newSize;
     circle.h = newSize;
+
+    if (circle.health <= 0) {
+        isGameStarted = false;
+        isGameWin = true;
+        // Affiche l'écran de fin de jeu et cache le canvas
+        document.getElementById("WINScreen").style.display = "block"; 
+        
+        const replayButton = document.getElementById("replayButton");
+        replayButton.addEventListener("click", restartGame, { once: true });
+    }
+
 }
+
+function restartGame() {
+    console.log("Restarting the game");
+    document.getElementById("WINScreen").style.display = "none";
+    document.getElementById("gameCanvas").style.display = "block";
+    // Réinitialiser les variables de jeu
+    isGameStarted = true;
+    isGameOver = false;
+    isWin = false;
+
+    // Réinitialiser les sprites et leur état
+    bigCircle.x = width / 2;
+    bigCircle.y = height / 2;
+    bigCircle.w = 100;
+    bigCircle.h = 100;
+    bigCircle.health = 100;
+
+    mouseShooter.x = width / 2;
+    mouseShooter.y = height - 30;
+    mouseShooter.health = 100;
+    velocityY = 0;
+    isJumping = false;
+
+    // Réinitialiser les projectiles et ennemis
+    projectiles.forEach(p => p.remove());
+    projectiles = [];
+
+    // Cacher l'écran de victoire et afficher le jeu
+   
+}
+
 
 function drawHealthBar() {
     let healthBarWidth = width - (width / 4); // Prendre toute la largeur du canvas
@@ -271,15 +291,25 @@ function startNewGame() {
     velocityY = 0;
     isJumping = false;
     isGameStarted = true;
+    isGameOver = false; // Reset game over state
+    isWin = false; // Reset win state
 
     // Cache l'écran de démarrage et affiche le canvas
     document.getElementById("startScreen").style.display = "none"; // Cache l'écran de démarrage
     document.getElementById("gameCanvas").style.display = "block"; // Affiche le canvas du jeu
+    document.getElementById("GOScreen").style.display = "none"; // Cache l'écran de fin de jeu
 }
 
+function endGame() {
+    isGameStarted = false;
+    isGameOver = true;
+
+    // Affiche l'écran de fin de jeu et cache le canvas
+    document.getElementById("GOScreen").style.display = "block"; // Affiche l'écran de fin de jeu
+    document.getElementById("gameCanvas").style.display = "none"; // Cache le canvas du jeu
+}
 
 function draw() {
-
     background(100);
 
     if (isGameStarted) {
@@ -291,7 +321,6 @@ function draw() {
         checkCollisions();
         drawHealthBar(); // Draw the health bar
         drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
-
         updateMovingPlatform();
 
         // Spawn enemies at intervals
@@ -299,7 +328,5 @@ function draw() {
             spawnEnemy();
             lastEnemySpawnTime = millis();
         }
-
     }
-    
 }
