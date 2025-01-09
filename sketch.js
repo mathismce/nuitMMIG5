@@ -1,6 +1,7 @@
 let bigCircle;
 let lasers;
 let mouseShooter;
+let gameOver = false;
 
 function setup() {
     new Canvas(600, 600);
@@ -22,18 +23,16 @@ function setup() {
 function draw() {
     background(0);
 
-    if (keyIsDown(90)) { // Z key
-        mouseShooter.y -= 5;
+    if (gameOver) {
+        textSize(32);
+        fill('white');
+        textAlign(CENTER, CENTER);
+        text('Game Over', width / 2, height / 2);
+        return;
     }
-    if (keyIsDown(83)) { // S key
-        mouseShooter.y += 5;
-    }
-    if (keyIsDown(81)) { // Q key
-        mouseShooter.x -= 5;
-    }
-    if (keyIsDown(68)) { // D key
-        mouseShooter.x += 5;
-    }
+
+    mouseShooter.x = mouseX;
+    mouseShooter.y = mouseY;
 
     if (mouseIsPressed) {
         let laser = new lasers.Sprite(mouseShooter.x, mouseShooter.y, 5, 5);
@@ -42,6 +41,18 @@ function draw() {
     }
 
     lasers.collides(bigCircle, circleHit);
+
+    // Check for collision between mouseShooter and bigCircle
+    if (mouseShooter.collides(bigCircle)) {
+        gameOver = true;
+    }
+
+    // Move the big circle to the left
+    bigCircle.x -= 1;
+
+    // Ensure the circle stays within the canvas
+    bigCircle.x = constrain(bigCircle.x, bigCircle.diameter / 2, width - bigCircle.diameter / 2);
+    bigCircle.y = constrain(bigCircle.y, bigCircle.diameter / 2, height - bigCircle.diameter / 2);
 }
 
 function circleHit(laser, circle) {
@@ -54,11 +65,15 @@ function circleHit(laser, circle) {
     if (circle.h < 0) {
         circle.h = 0; // Prevent the height from becoming negative
     }
+    if (circle.w === 0 && circle.h === 0) {
+        gameOver = true;
+    }
 }
 
 function startNewGame() {
-    bigCircle.x = width / 2;
+    bigCircle.x = width - bigCircle.diameter / 2; // Start from the right
     bigCircle.y = height / 2;
     bigCircle.w = 100; // Reset the width of the circle
     bigCircle.h = 100; // Reset the height of the circle
+    gameOver = false;
 }
