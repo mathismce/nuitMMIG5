@@ -16,8 +16,9 @@ function setup() {
     lasers = new Group();
     lasers.image = 'assets/asteroids_bullet.png';
 
-    mouseShooter = new Sprite(width / 2, height - 50, 20, 20, 'static');
-    mouseShooter.color = 'white';
+    mouseShooter = new Sprite(width / 2, height - 50, 100, 80, 'static');
+    mouseShooter.image = 'assets/zippy.svg';
+    
 
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
@@ -161,7 +162,7 @@ function startNewGame() {
 }
 
 function draw() {
-    background(0);
+    background(100);
 
     applyGravity();
     handleMovement();
