@@ -1,3 +1,4 @@
+let isGameStarted = false;
 let bigCircle, lasers, mouseShooter, ground;
 let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
@@ -20,10 +21,9 @@ function setup() {
     lasers = new Group();
     lasers.image = 'assets/asteroids_bullet.png';
 
-
-    mouseShooter = new Sprite(width / 2, height - 50, 100, 80, 'static');
+    mouseShooter = new Sprite(width / 2, height - 50, 70, 80, 'static');
     mouseShooter.image = 'assets/zippy.svg';
-    
+
 
 
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
@@ -38,8 +38,7 @@ function setup() {
         platform.color = 'blue';
     }
 
-
-
+    
     ground = new Sprite(width / 2, height - 10, width, 20, 'static');
     ground.color = 'blue';
 
@@ -58,7 +57,12 @@ function setup() {
     movingPlatform.direction = 1; // Initialize direction (1 for right, -1 for left)
     movingPlatform.y = height - 400;
 
-    startNewGame();
+    document.getElementById("startScreen").style.display = "block";
+    document.getElementById("gameCanvas").style.display = "none";
+
+    // Ajout de l'événement pour démarrer le jeu
+    document.getElementById("startButton").addEventListener("click", startNewGame);
+
 }
 
 
@@ -243,37 +247,46 @@ function drawMouseShooterHealthBar() {
 }
 
 function startNewGame() {
+    // Réinitialisation des positions et des éléments du jeu
     bigCircle.x = width / 2;
     bigCircle.y = height / 2;
     bigCircle.w = 100;
     bigCircle.h = 100;
-    bigCircle.health = 100; // Reset health
+    bigCircle.health = 100; // Réinitialiser la santé
     mouseShooter.y = height - 30;
     mouseShooter.health = 100; // Reset health
     velocityY = 0;
     isJumping = false;
+    isGameStarted = true;
+
+    // Cache l'écran de démarrage et affiche le canvas
+    document.getElementById("startScreen").style.display = "none"; // Cache l'écran de démarrage
+    document.getElementById("gameCanvas").style.display = "block"; // Affiche le canvas du jeu
 }
+
 
 function draw() {
 
     background(100);
 
+    if (isGameStarted) {
+        applyGravity();
+        handleMovement();
+        handleShooting();
+        updateProjectiles();
+        updateEnemies(); // Update enemies
+        checkCollisions();
+        drawHealthBar(); // Draw the health bar
+        drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
 
-    applyGravity();
-    handleMovement();
-    handleShooting();
-    updateProjectiles();
-    updateEnemies(); // Update enemies
-    checkCollisions();
-    drawHealthBar(); // Draw the health bar
-    drawMouseShooterHealthBar(); // Draw the health bar for mouseShooter
+        updateMovingPlatform();
 
-    updateMovingPlatform(); // Update moving platform
+        // Spawn enemies at intervals
+        if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
+            spawnEnemy();
+            lastEnemySpawnTime = millis();
+        }
 
-
-    // Spawn enemies at intervals
-    if (millis() - lastEnemySpawnTime > enemySpawnInterval) {
-        spawnEnemy();
-        lastEnemySpawnTime = millis();
     }
+    
 }
