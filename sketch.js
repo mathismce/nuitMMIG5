@@ -6,14 +6,13 @@ function setup() {
     new Canvas(600, 600);
     displayMode('maxed');
 
-    bigCircle = new Sprite();
-    bigCircle.diameter = 200;
+    bigCircle = new Sprite(width / 2, height / 2, 100, 'static');
     bigCircle.color = 'red';
 
     lasers = new Group();
     lasers.image = 'assets/asteroids_bullet.png';
 
-    mouseShooter = new Sprite(width / 2, height - 30, 20, 20);
+    mouseShooter = new Sprite(width / 2, height - 30, 20, 20, 'static');
     mouseShooter.color = 'white';
 
     startNewGame();
