@@ -4,7 +4,7 @@ let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
 let enemies = [];
-let enemySpawnInterval = 2000; // Interval between enemy spawns in milliseconds
+let enemySpawnInterval = 10000; // Interval between enemy spawns in milliseconds
 let lastEnemySpawnTime = 0;
 
 
@@ -164,19 +164,31 @@ function startNewGame() {
 }
 
 function spawnEnemy() {
-    let enemy = new Sprite(-50, random(50, height - 50), 50, 50, 'dynamic');
-    enemy.color = 'purple';
-    enemy.velocityX = 2;
-    enemies.push(enemy);
+    let groupSize = floor(random(5, 9)); // Random number of enemies between 5 and 8
+    for (let i = 0; i < groupSize; i++) {
+        let enemy = new Sprite(width + 50 + i * 60, height - 60, 50, 50, 'dynamic'); // Adjusted height and spacing
+        enemy.color = 'purple';
+        enemy.velocityX = -2;
+        enemy.velocityY = 0; // Initial vertical velocity
+        enemies.push(enemy);
+    }
 }
 
 function updateEnemies() {
     for (let i = enemies.length - 1; i >= 0; i--) {
         let enemy = enemies[i];
         enemy.x += enemy.velocityX;
+        enemy.velocityY += gravity; // Apply gravity
+        enemy.y += enemy.velocityY;
+
+        // Check collision with ground
+        if (enemy.y + enemy.h / 2 > ground.y - ground.h / 2) {
+            enemy.y = ground.y - ground.h / 2 - enemy.h / 2;
+            enemy.velocityY = 0;
+        }
 
         // Remove enemy if it goes out of bounds
-        if (enemy.x > width + 50) {
+        if (enemy.x < -50) {
             enemy.remove();
             enemies.splice(i, 1);
         }
