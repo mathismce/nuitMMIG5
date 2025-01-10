@@ -256,21 +256,56 @@ function drawMouseShooterHealthBar() {
     rect(healthBarX, healthBarY, healthBarWidth * (mouseShooter.health / 100), healthBarHeight);
 }
 
-function startNewGame() {
-    // Réinitialisation des positions et des éléments du jeu
+let isVideoCompleted = false;
+
+  // Event listener for the "Start the game" button
+  document.getElementById("startButton").addEventListener("click", startVideo);
+
+  function startNewGame() {
+    if (!isVideoCompleted) {
+      return; // Prevent game start if the video hasn't ended yet
+    }
+
+    // Game initialization logic
     mouseShooter.y = height - 30;
     mouseShooter.health = 100; // Reset health
     velocityY = 0;
     isJumping = false;
     isGameStarted = true;
-    isGameOver = false; // Reset game over state
-    isWin = false; // Reset win state
+    isGameOver = false;
+    isWin = false;
 
-    // Cache l'écran de démarrage et affiche le canvas
-    document.getElementById("startScreen").style.display = "none"; // Cache l'écran de démarrage
-    document.getElementById("gameCanvas").style.display = "block"; // Affiche le canvas du jeu
-    document.getElementById("GOScreen").style.display = "none"; // Cache l'écran de fin de jeu
-}
+    // Show the game canvas
+    document.getElementById("gameCanvas").style.display = "block"; // Show canvas
+
+    // Hide game over screen (if visible)
+    document.getElementById("GOScreen").style.display = "none"; // Hide game over screen
+
+    // Make sure game logic doesn't run until after video ends
+    if (isGameStarted) {
+      // Start running game logic here (e.g., your p5.js or game logic)
+    }
+  }
+
+  function startVideo() {
+    const startScreen = document.getElementById("startScreen");
+    const startVideo = document.getElementById("startVideo");
+
+    // Hide the start screen and show the video
+    startScreen.style.display = "none";
+    startVideo.style.display = "block"; // Show video
+
+    // Play the video
+    startVideo.play();
+
+    // Wait for the video to end before starting the game
+    startVideo.onended = function() {
+      startVideo.style.display = "none"; // Hide video after it finishes
+      isVideoCompleted = true; // Set flag to true when the video ends
+      startNewGame(); // Start the game after the video ends
+    };
+  }
+
 
 function endGame() {
     isGameStarted = false;

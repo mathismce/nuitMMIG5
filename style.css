@@ -90,6 +90,21 @@ button:hover {
   height: 100%;
 }
 
+#startVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: none; /* Hidden by default */
+}
+
+
+#gameCanvas {
+    display: none; /* Hidden until the game starts */
+}
+
 .title {
   padding-bottom: 2rem;
 }
