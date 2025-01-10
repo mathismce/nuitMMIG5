@@ -25,8 +25,7 @@ function spawnEnemy() {
 
 function enemyShoot(enemy) {
     let projectile = new Sprite(enemy.x, enemy.y, 10, 10, 'dynamic');
-    projectile.color = 'red';
-    projectile.shape = 'circle'; // Set shape to circle
+    projectile.image = `assets/projectilevirus.svg`
     let angle = atan2(mouseShooter.y - enemy.y, mouseShooter.x - enemy.x);
     projectile.velocityX = cos(angle) * 5;
     projectile.velocityY = sin(angle) * 5;
