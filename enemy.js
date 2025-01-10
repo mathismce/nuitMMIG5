@@ -7,11 +7,19 @@ function spawnEnemy() {
     let groupSize = floor(random(5, 9)); // Random number of enemies between 5 and 8
     for (let i = 0; i < groupSize; i++) {
         let enemy = new Sprite(width + 50 + i * 60, height - 60, 50, 50, 'dynamic'); // Adjusted height and spacing
-        enemy.color = 'purple';
+        let folderIndex = floor(random(0, 4)); // Random folder index between 0 and 3
+        enemy.image = `assets/enemy/${folderIndex}/0.svg`; // Set initial image from random folder
         enemy.velocityX = -2;
         enemy.velocityY = 0; // Initial vertical velocity
         enemy.health = 30; // Add health property
         enemies.push(enemy);
+
+        // Animate enemy images
+        let frameIndex = 0;
+        setInterval(() => {
+            enemy.image = `assets/enemy/${folderIndex}/${frameIndex}.svg`;
+            frameIndex = (frameIndex + 1) % 2; // Cycle between 0 and 1
+        }, 150);
     }
 }
 
