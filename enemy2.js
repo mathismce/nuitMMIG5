@@ -23,8 +23,7 @@ function spawnFlyingEnemy() {
 
 function flyingEnemyShoot(flyingEnemy) {
     let projectile = new Sprite(flyingEnemy.x, flyingEnemy.y, 10, 10, 'dynamic');
-    projectile.color = 'purple';
-    projectile.shape = 'circle'; // Set shape to circle
+    projectile.image = `assets/projectileemail.svg`
     let angle = atan2(mouseShooter.y - flyingEnemy.y, mouseShooter.x - flyingEnemy.x);
     projectile.velocityX = cos(angle) * 5;
     projectile.velocityY = sin(angle) * 5;

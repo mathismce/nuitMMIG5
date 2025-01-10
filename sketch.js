@@ -38,7 +38,7 @@ function setup() {
         let validPosition = false;
         while (!validPosition) {
             x = random(width);
-            y = random(height - 300, height - 150);
+            y = random(height - 400, height - 150);
             validPosition = true;
             for (let platform of platforms) {
                 if (dist(x, y, platform.x, platform.y) < minDistance) {
@@ -46,16 +46,26 @@ function setup() {
                 }
             }
         }
-        platforms.push(new Sprite(x, y, 150, 20, 'static'));
+        let platformType = random([1, 2]); // Randomly choose between two platform types
+        if (platformType === 1) {
+            platforms.push(new Sprite(x, y, 150, 100, 'static'));
+        } else {
+            platforms.push(new Sprite(x, y, 220, 130, 'static'));
+        }
     }
 
     for (let platform of platforms) {
-        platform.color = 'blue';
+        if (platform.w === 150) {
+            platform.image = 'assets/info_box.svg';
+        } else {
+            platform.image = 'assets/warning_box.svg';
+        }
     }
 
+
     // Create a moving platform
-    movingPlatform = new Sprite(width / 2, height - 150, 150, 20, 'kinematic'); // Kinematic to allow movement
-    movingPlatform.color = 'green';
+    movingPlatform = new Sprite(width / 2, height - 150, 203, 110, 'kinematic'); // Kinematic to allow movement
+    movingPlatform.image = 'assets/error_box.svg';
     movingPlatform.direction = 1; // Initialize direction (1 for right, -1 for left)
     movingPlatform.y = height - 400;
 
@@ -123,7 +133,7 @@ function handleShooting() {
     if (mouseIsPressed && !isMousePressed) {
         isMousePressed = true;
         let projectile = new Sprite(mouseShooter.x, mouseShooter.y, 10, 10);
-        projectile.image = 'assets/asteroids_bullet.png';
+        projectile.image = 'assets/projectilesouris.svg';
         let angle = atan2(mouseY - mouseShooter.y, mouseX - mouseShooter.x);
         projectile.velocityX = cos(angle) * 10;
         projectile.velocityY = sin(angle) * 10;
@@ -260,12 +270,12 @@ function drawMouseShooterHealthBar() {
 
 let isVideoCompleted = false;
 
-  // Event listener for the "Start the game" button
-  document.getElementById("startButton").addEventListener("click", startVideo);
+// Event listener for the "Start the game" button
+document.getElementById("startButton").addEventListener("click", startVideo);
 
-  function startNewGame() {
+function startNewGame() {
     if (!isVideoCompleted) {
-      return; // Prevent game start if the video hasn't ended yet
+        return; // Prevent game start if the video hasn't ended yet
     }
 
     // Game initialization logic
@@ -285,11 +295,11 @@ let isVideoCompleted = false;
 
     // Make sure game logic doesn't run until after video ends
     if (isGameStarted) {
-      // Start running game logic here (e.g., your p5.js or game logic)
+        // Start running game logic here (e.g., your p5.js or game logic)
     }
-  }
+}
 
-  function startVideo() {
+function startVideo() {
     const startScreen = document.getElementById("startScreen");
     const startVideo = document.getElementById("startVideo");
 
@@ -301,12 +311,12 @@ let isVideoCompleted = false;
     startVideo.play();
 
     // Wait for the video to end before starting the game
-    startVideo.onended = function() {
-      startVideo.style.display = "none"; // Hide video after it finishes
-      isVideoCompleted = true; // Set flag to true when the video ends
-      startNewGame(); // Start the game after the video ends
+    startVideo.onended = function () {
+        startVideo.style.display = "none"; // Hide video after it finishes
+        isVideoCompleted = true; // Set flag to true when the video ends
+        startNewGame(); // Start the game after the video ends
     };
-  }
+}
 
 
 function endGame() {
