@@ -71,8 +71,8 @@ function setup() {
 
     document.getElementById("startScreen").style.display = "block";
     document.getElementById("gameCanvas").style.display = "none";
-    document.getElementById("GOScreen").style.display = "none"; // Hide game over screen initially
-    document.getElementById("WINScreen").style.display = "none";
+    document.getElementById("GOVideoScreen").style.display = "none"; // Hide game over screen initially
+    document.getElementById("WINVideoScreen").style.display = "none";
     // Ajout de l'événement pour démarrer le jeu
     document.getElementById("startButton").addEventListener("click", startNewGame);
 }
@@ -232,27 +232,41 @@ function checkCollisions() {
     }
 }
 
+function showWinScreen() {
+    console.log("Displaying win screen");
+    document.getElementById("gameCanvas").style.display = "none"; // Hide the game
+    document.getElementById("WINVideoScreen").style.display = "block"; // Show win screen
+}
+
 function restartGame() {
     console.log("Restarting the game");
-    document.getElementById("WINScreen").style.display = "none";
-    document.getElementById("gameCanvas").style.display = "block";
-    // Réinitialiser les variables de jeu
+    document.getElementById("WINVideoScreen").style.display = "none"; // Hide the win screen
+    document.getElementById("gameCanvas").style.display = "block"; // Show the game canvas
+
+    // Reset game variables
     isGameStarted = true;
     isGameOver = false;
     isWin = false;
 
-    // Réinitialiser les sprites et leur état
+    // Reset sprite states
     mouseShooter.x = width / 2;
     mouseShooter.y = height - 30;
     mouseShooter.health = 100;
     velocityY = 0;
     isJumping = false;
 
-    // Réinitialiser les projectiles et ennemis
+    // Reset projectiles
     projectiles.forEach(p => p.remove());
     projectiles = [];
 
-    // Cacher l'écran de victoire et afficher le jeu
+    console.log("Game restarted successfully");
+}
+
+// Example: Call `showWinScreen` when the player wins
+function checkWinCondition() {
+    if (isWin) {
+        showWinScreen();
+    }
 }
 
 function drawMouseShooterHealthBar() {
@@ -291,7 +305,7 @@ function startNewGame() {
     document.getElementById("gameCanvas").style.display = "block"; // Show canvas
 
     // Hide game over screen (if visible)
-    document.getElementById("GOScreen").style.display = "none"; // Hide game over screen
+    document.getElementById("GOVideoScreen").style.display = "none"; // Hide game over screen
 
     // Make sure game logic doesn't run until after video ends
     if (isGameStarted) {
@@ -318,14 +332,32 @@ function startVideo() {
     };
 }
 
-
+// Function to trigger the end of the game
 function endGame() {
     isGameStarted = false;
     isGameOver = true;
+  
+    // Hide the game canvas and show the game over video
+    document.getElementById("gameCanvas").style.display = "none"; // Hide the game canvas
+    showGameOver(); // Show the game over video
+  }
+  
+  // Function to show the game over video and the restart button after it finishes
+  function showGameOver() {
+    const gameOverVideo = document.getElementById("gameOverVideo");
+    const restartButton = document.getElementById("restartButton");
+    const GOVideoScreen = document.getElementById("GOVideoScreen");
 
-    // Affiche l'écran de fin de jeu et cache le canvas
-    document.getElementById("GOScreen").style.display = "block"; // Affiche l'écran de fin de jeu
-    document.getElementById("gameCanvas").style.display = "none"; // Cache le canvas du jeu
+    // Show the game over video screen
+    GOVideoScreen.style.display = "flex"; // Show the video screen
+
+    // Ensure the video plays
+    gameOverVideo.play();
+
+    // When the video ends, show the restart button
+    gameOverVideo.onended = function () {
+        restartButton.style.display = "block"; // Show the restart button after the video ends
+    };
 }
 
 function displayWaveMessage(message) {

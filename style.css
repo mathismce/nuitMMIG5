@@ -85,6 +85,7 @@ button:hover {
   height: 100%;
 }
 
+
 #GOScreen {
   position: fixed; /* Utilise fixed pour qu'il reste centré même lors du scroll */
   top: 50%;
@@ -110,9 +111,51 @@ button:hover {
   display: none; /* Hidden by default */
 }
 
+
+#startVideo, #GOVideoScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: none; /* Hidden by default */
+  }
+
+  #WINVideoScreen {
+    position: fixed;
+    top: 0; /* Make sure the top is at 0 for proper alignment */
+    left: 0;
+    width: 100%;
+    height: 100%; /* Keep full height */
+    display: none; /* Hidden by default */
+    object-fit: cover;
+}
+
+
+
+
 #gameCanvas {
   display: none; /* Hidden until the game starts */
 }
+
+#gameOverVideo, #winVideo {
+    width: 100%; 
+    height: auto;
+}
+
+#restartButton{
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50; /* Green */
+    z-index: 999;
+}
+
+#restartButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
 
 .title {
   padding-bottom: 2rem;

@@ -102,7 +102,7 @@ function updateEnemies() {
             if (mouseShooter.health <= 0) {
                 // Handle game over logic
                 mouseShooter.remove();
-                document.getElementById('GOScreen').style.display = 'block';
+                document.getElementById('GOVideoScreen').style.display = 'block';
                 noLoop(); // Stop the draw loop
             }
         }
