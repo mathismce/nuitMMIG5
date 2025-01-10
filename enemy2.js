@@ -7,11 +7,17 @@ function spawnFlyingEnemy() {
     let groupSize = floor(random(2, 4)); // Random number of enemies between 5 and 8
     for (let i = 0; i < groupSize; i++) {
         let flyingEnemy = new Sprite(width + 50 + i * 60, random(50, height / 2 - 50), 30, 30, 'dynamic'); // Adjusted height and spacing
-        flyingEnemy.color = 'green'; // Changed color to green
+        flyingEnemy.image = 'assets/enemy2/0.svg'; // Initial image
         flyingEnemy.velocityX = -2;
         flyingEnemy.velocityY = 0; // Initial vertical velocity
         flyingEnemy.health = 30; // Add health property
         flyingEnemies.push(flyingEnemy);
+
+        let frameIndex = 0;
+        setInterval(() => {
+            flyingEnemy.image = `assets/enemy2/${frameIndex}.svg`;
+            frameIndex = (frameIndex + 1) % 2 // Ensure frameIndex cycles 
+        }, 150);
     }
 }
 

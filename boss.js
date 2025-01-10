@@ -4,10 +4,17 @@ let bossSpawned = false;
 
 function spawnBoss() {
     boss = new Sprite(width - 50, height / 2, 100, 100, 'static');
-    boss.color = 'red';
+    boss.image = 'assets/boss/0.svg'; // Initial image
     boss.velocityX = 0; // Boss does not move
     boss.health = 500; // Boss health
     bossSpawned = true;
+
+    // Set the boss image to cycle through the images
+    let frameIndex = 0;
+    setInterval(() => {
+        boss.image = `assets/boss/${frameIndex}.svg`;
+        frameIndex = (frameIndex + 1) % 6 // Ensure frameIndex cycles 
+    }, 150);
 }
 
 function bossShoot() {

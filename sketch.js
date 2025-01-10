@@ -102,10 +102,15 @@ function handleMovement() {
     if (keyIsDown(81)) {
         mouseShooter.x = max(mouseShooter.x - 5, mouseShooter.w / 2); // Q key
         mouseShooter.mirror.x = true; // Flip image horizontally
-    }
-    if (keyIsDown(68)) {
+        let frameIndex = Math.floor(frameCount / 4) % 8; // Slower animation by changing frame every 4 frames
+        mouseShooter.image = `assets/zippy/${frameIndex}.svg`;
+    } else if (keyIsDown(68)) {
         mouseShooter.x = min(mouseShooter.x + 5, width - mouseShooter.w / 2); // D key
         mouseShooter.mirror.x = false; // Reset image orientation
+        let frameIndex = Math.floor(frameCount / 4) % 8; // Slower animation by changing frame every 4 frames
+        mouseShooter.image = `assets/zippy/${frameIndex}.svg`;
+    } else {
+        mouseShooter.image = 'assets/zippy.svg'; // Reset to default image
     }
 
     // Ensure mouseShooter stays within the canvas vertically
@@ -288,7 +293,8 @@ function endGame() {
 // }
 
 function draw() {
-    background(100);
+    let bgImage = loadImage('assets/bliss.svg');
+    background(bgImage);
 
     if (isGameStarted) {
         applyGravity();
@@ -316,7 +322,6 @@ function draw() {
         updateMovingPlatform();
 
         updateBoss();
-
 
         // Spawn enemies at intervals
         if (millis() - lastEnemySpawnTime > enemySpawnInterval && !bossSpawned) {
