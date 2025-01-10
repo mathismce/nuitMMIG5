@@ -81,7 +81,7 @@ function updateBoss() {
                 projectiles.splice(i, 1);
                 if (boss.health <= 0) {
                     boss.remove();
-                    document.getElementById("WINScreen").style.display = "block";
+                    document.getElementById("WINVideoScreen").style.display = "block";
                     document.getElementById("gameCanvas").style.display = "none";
                     noLoop()
                     increaseScore(1000);
@@ -114,7 +114,7 @@ function updateBoss() {
             mouseShooter.health -= 20; // Decrease health
             if (mouseShooter.health <= 0) {
                 mouseShooter.remove();
-                document.getElementById('GOScreen').style.display = 'block';
+                document.getElementById('GOVideoScreen').style.display = 'block';
                 noLoop(); // Stop the draw loop
             }
         }
