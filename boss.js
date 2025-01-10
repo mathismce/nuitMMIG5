@@ -23,7 +23,7 @@ function bossShoot() {
         () => {
             let projectile = new Sprite(boss.x, boss.y, 20, 20, 'dynamic');
             projectile.image = 'assets/folder.svg';
-            projectile.rotationSpeed = 5; 
+            projectile.rotationSpeed = 5;
             let angle = atan2(boss.y - height / 2, boss.x - width); // Aim towards the right side
             projectile.velocityX = cos(angle) * 7;
             projectile.velocityY = sin(angle) * 7;
@@ -34,7 +34,7 @@ function bossShoot() {
             for (let i = -1; i <= 1; i++) {
                 let projectile = new Sprite(boss.x, boss.y, 20, 20, 'dynamic');
                 projectile.image = 'assets/folder.svg';
-                projectile.rotationSpeed = 3; 
+                projectile.rotationSpeed = 3;
                 let angle = atan2(mouseShooter.y - boss.y, mouseShooter.x - boss.x) + i * PI / 24; // Narrow spread towards the mouseShooter
                 projectile.velocityX = cos(angle) * 7;
                 projectile.velocityY = sin(angle) * 7;
@@ -46,7 +46,7 @@ function bossShoot() {
             for (let i = -3; i <= 3; i++) {
                 let projectile = new Sprite(boss.x, boss.y, 20, 20, 'dynamic');
                 projectile.image = 'assets/folder.svg';
-                projectile.rotationSpeed = 3; 
+                projectile.rotationSpeed = 3;
                 let angle = i * PI / 3.5; // Spread in a circle around the boss
                 projectile.velocityX = cos(angle) * 7;
                 projectile.velocityY = sin(angle) * 7;
@@ -61,9 +61,9 @@ function bossShoot() {
 }
 
 function updateBoss() {
-    if (!bossSpawned && score > 300) {
-        spawnBoss();
-    }
+    // if (!bossSpawned && score > 800) {
+    //     spawnBoss();
+    // }
 
     if (bossSpawned) {
         // Boss does not move

@@ -2,10 +2,12 @@ let isGameStarted = false;
 let isGameOver = false; // Variable to track if the game is over
 let isWin = false; // Variable to track if the player wins
 let lasers, mouseShooter, ground;
+let enemySpawned = false, flyingEnemySpawned = false, bothEnemiesSpawned = false;
 let gravity = 0.5, velocityY = 0, jumpForce = -15, isJumping = false;
 let projectiles = [];
 let isMousePressed = false;
 let platforms = []; // Array to hold platforms
+let waveTransition = false;
 
 function setup() {
     new Canvas();
@@ -36,7 +38,7 @@ function setup() {
         let validPosition = false;
         while (!validPosition) {
             x = random(width);
-            y = random(height - 300, height - 150); 
+            y = random(height - 300, height - 150);
             validPosition = true;
             for (let platform of platforms) {
                 if (dist(x, y, platform.x, platform.y) < minDistance) {
@@ -316,6 +318,23 @@ function endGame() {
     document.getElementById("gameCanvas").style.display = "none"; // Cache le canvas du jeu
 }
 
+function displayWaveMessage(message) {
+    let waveMessage = document.createElement('div');
+    waveMessage.innerText = message;
+    waveMessage.style.position = 'absolute';
+    waveMessage.style.top = '50%';
+    waveMessage.style.left = '50%';
+    waveMessage.style.transform = 'translate(-50%, -50%)';
+    waveMessage.style.color = 'white';
+    waveMessage.style.fontSize = '48px';
+    waveMessage.style.zIndex = '1000';
+    document.body.appendChild(waveMessage);
+
+    setTimeout(() => {
+        document.body.removeChild(waveMessage);
+    }, 2000); // Display message for 2 seconds
+}
+
 // function checkBossDefeat() {
 //     if (bossSpawned && boss.health <= 0) {
 //         boss.remove();
@@ -337,19 +356,70 @@ function draw() {
         handleShooting();
         updateProjectiles();
 
-        if (score > 200 && !bossSpawned) {
-            spawnBoss();
-            score = 0
-            bossSpawned = true; // Ensure only one boss is spawned
-            // Remove all other enemies
-            enemies.forEach(enemy => enemy.remove());
-            enemies = [];
-            flyingEnemies.forEach(enemy => enemy.remove());
-            flyingEnemies = [];
-        } else {
-            updateEnemies(); // Update enemies
-            updateFlyingEnemies();
+        // Spawn enemies based on score with pauses between waves
+        if (score < 700 && !enemySpawned) {
+            if (!waveTransition) {
+                waveTransition = true;
+                setTimeout(() => {
+                    enemies.forEach(enemy => enemy.remove());
+                    enemies = [];
+                    spawnEnemy();
+                    enemySpawned = true;
+                    mouseShooter.health = 100; // Reset health
+                    waveTransition = false;
+                }, 2000); // 2 seconds pause between waves
+                displayWaveMessage("Wave 1");
+            }
+        } else if (score >= 700 && score < 1500 && !flyingEnemySpawned) {
+            if (!waveTransition) {
+                waveTransition = true;
+                setTimeout(() => {
+                    enemies.forEach(enemy => enemy.remove());
+                    enemies = [];
+                    flyingEnemies.forEach(enemy => enemy.remove());
+                    flyingEnemies = [];
+                    spawnFlyingEnemy();
+                    flyingEnemySpawned = true;
+                    mouseShooter.health = 100; // Reset health
+                    waveTransition = false;
+                }, 2000); // 2 seconds pause between waves
+                displayWaveMessage("Wave 2");
+            }
+        } else if (score >= 1500 && score < 2200 && !bothEnemiesSpawned) {
+            if (!waveTransition) {
+                waveTransition = true;
+                setTimeout(() => {
+                    enemies.forEach(enemy => enemy.remove());
+                    flyingEnemies.forEach(enemy => enemy.remove());
+                    enemies = [];
+                    flyingEnemies = [];
+                    spawnEnemy();
+                    spawnFlyingEnemy();
+                    bothEnemiesSpawned = true;
+                    mouseShooter.health = 100; // Reset health
+                    waveTransition = false;
+                }, 2000); // 2 seconds pause between waves
+                displayWaveMessage("Wave 3");
+            }
+        } else if (score >= 2200 && !bossSpawned) {
+            if (!waveTransition) {
+                waveTransition = true;
+                setTimeout(() => {
+                    enemies.forEach(enemy => enemy.remove());
+                    flyingEnemies.forEach(enemy => enemy.remove());
+                    enemies = [];
+                    flyingEnemies = [];
+                    spawnBoss();
+                    bossSpawned = true;
+                    mouseShooter.health = 100; // Reset health
+                    waveTransition = false;
+                }, 2000); // 2 seconds pause between waves
+                displayWaveMessage("Boss Wave");
+            }
         }
+
+        updateEnemies(); // Update enemies
+        updateFlyingEnemies();
 
         checkCollisions();
 
@@ -358,10 +428,9 @@ function draw() {
 
         updateBoss();
 
-        // Spawn enemies at intervals
         if (millis() - lastEnemySpawnTime > enemySpawnInterval && !bossSpawned) {
             spawnEnemy();
-            spawnFlyingEnemy();
+            enemySpawned = true;
             lastEnemySpawnTime = millis();
         }
     }
